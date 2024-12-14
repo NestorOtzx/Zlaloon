@@ -1,0 +1,5 @@
+.leftpanel{
+    width: 25%;
+    box-shadow: 5px 0 20px -2px rgb(0, 0, 0);
+    z-index: 30;
+}

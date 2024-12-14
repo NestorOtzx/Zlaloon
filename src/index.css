@@ -1,0 +1,24 @@
+:root {
+  --font-color1: #ffffff;
+  --font-color2: #e6e6e6;
+  --font-color3: #c3c3c3;
+  --font-color4: #b5b5b5;
+  --font-color5: #7c7c7c;
+  --font-color6: #626262;
+  --font-color7: #414141;
+  --font-color8: #202020;
+  --background-color: rgb(46, 46, 54);
+  --background-contrast: rgb(27, 27, 27);
+  --highlight1: rgb(74, 74, 74);
+  --highlight2: rgb(42, 42, 42);
+}
+html, body, #root{
+  margin: 0!important;
+  height: 100%;
+  width: 100%;
+}
+body{
+  
+  background-color: var(--background-color);
+  color: var(--font-color1);
+}

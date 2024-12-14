@@ -1,0 +1,12 @@
+.home{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.panels{
+    display: flex;
+    flex-grow: 1;
+}

@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=REM:ital,wght@0,100..900;1,100..900&display=swap');
+
+.auth{
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth_menu{
+    color: white;
+    background-color: black;
+    box-shadow: 0px 0px 100px 10px black;
+    width: 30rem;
+}
+
+.auth_content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.close_auth{
+    color: var(--font-color1);
+}
+
+.auth_content form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth_label{
+    font-family: Poppins;
+    font-size: 35pt;
+}
+
+.auth_deco_line1{
+    width: 60%;
+    margin: 1% 0 10% 0;
+    height: 1px;
+    background-color: var(--font-color7);
+}
+.auth_deco_line2{
+    width: 60%;
+    margin: 10% 0 5% 0;
+    height: 1px;
+    background-color: var(--font-color7);
+}
+
+.auth_menu ul
+{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+}
+
+.auth_menu ul input{
+    padding: 10px  10px  10px  20px;
+    border-radius: 20px;
+    border: none;
+    color: var(--font-color1);
+    background-color: var(--highlight2);
+}
+
+.auth_menu ul input:focus{
+    outline: none;
+}
+
+.auth_menu li+li
+{
+    margin: 20px 0 0 0;    
+}
+
+.auth_menu button{
+    padding: 10px  20px  10px  20px;
+    border-radius: 20px;
+    border: none;
+    color: var(--background-color);
+    background-color: var(--font-color1);
+    font-weight: 900;
+    margin: 0% 0 2% 0;
+}
+
+.auth_menu button:hover{
+    background-color: var(--font-color3);
+}
