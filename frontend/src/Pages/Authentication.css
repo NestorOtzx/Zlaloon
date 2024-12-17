@@ -64,7 +64,7 @@
     width: 60%;
 }
 
-.auth_menu ul input{
+.noerrorinput{
     padding: 10px  20px  10px  20px;
     width: 100%;
     box-sizing: border-box;
@@ -74,11 +74,23 @@
     background-color: var(--highlight2);
 }
 
+.errorinput{
+    padding: 10px  20px  10px  20px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 20px;
+    border: 2px var(--error1) solid;
+    color: var(--font-color1);
+    background-color: var(--highlight2);
+}
+
 .auth_menu ul li p{
     color: var(--error1);
     padding:0;
     margin: 0;
 }
+
+
 
 
 .auth_menu ul input:focus{

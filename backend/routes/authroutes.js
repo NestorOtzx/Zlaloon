@@ -7,5 +7,6 @@ router.get('/', (req, res) => {
 });
 
 router.post('/signup', authcontroll.signUpController);
+router.post('/login', authcontroll.loginController);
 
 module.exports = router;

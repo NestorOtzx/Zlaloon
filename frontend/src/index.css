@@ -12,6 +12,7 @@
   --highlight1: rgb(74, 74, 74);
   --highlight2: rgb(42, 42, 42);
   --error1: #df0e49;
+  --error2: #ff0000;
 
 }
 html, body, #root{
