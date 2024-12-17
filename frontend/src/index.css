@@ -1,5 +1,5 @@
 :root {
-  --font-color1: #ffffff;
+  --font-color1: #efefef;
   --font-color2: #e6e6e6;
   --font-color3: #c3c3c3;
   --font-color4: #b5b5b5;
@@ -11,6 +11,8 @@
   --background-contrast: rgb(27, 27, 27);
   --highlight1: rgb(74, 74, 74);
   --highlight2: rgb(42, 42, 42);
+  --error1: #df0e49;
+
 }
 html, body, #root{
   margin: 0!important;

@@ -76,6 +76,7 @@ nav ul{
     padding: 10px 10px 10px 20px;
     border-radius: 20px 0 0 20px;
     border: none;
+    background-color: var(--font-color1);
 }
 
 .left input:focus{
