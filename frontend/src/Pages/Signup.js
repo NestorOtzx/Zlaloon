@@ -46,7 +46,7 @@ export default function Signup(){
         if (validateForm())
         {
             try{
-                const response = await axios.post("http://localhost:5000/signup", data);
+                const response = await axios.post("http://localhost:5000/signup", data, { withCredentials: true });
                 console.log("Exito! mensaje de respuesta: ", response.data.message);
                 navigate('/');
 

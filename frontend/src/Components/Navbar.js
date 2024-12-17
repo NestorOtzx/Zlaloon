@@ -72,7 +72,7 @@ export default function Navbar()
             </nav>
 
             {b_profile && (
-            <Roundmenu ref = {panelsRef} style={{width: "300px", float: "right", color: "black", "background-color": "white"}}>
+            <Roundmenu ref = {panelsRef} style={{width: "300px", float: "right", color: "black"}} className = "rightmenus">
                 <h2>Perfil</h2>
                 <span className="profile_text">No estás logeado</span>
                 <Link to = "/signup" className="panel_roundbutton">Registrarse</Link>

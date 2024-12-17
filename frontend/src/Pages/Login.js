@@ -20,7 +20,7 @@ export default function Login(){
         const data = {username: userdata.username, password: userdata.password};
         console.log("VOY A ENVIARRR AAA", data);
         try{
-            const response = await axios.post("http://localhost:5000/login", data);
+            const response = await axios.post("http://localhost:5000/login", data, { withCredentials: true });
             console.log("Exito! mensaje de respuesta: ", response.data.message);
             navigate('/');
         }catch (error){
