@@ -32,7 +32,8 @@ export default function Signup(){
           newErrors.rpassword = "Las contraseñas no coinciden.";
         }
     
-        setErrors(newErrors);
+        /*setErrors(newErrors);*/
+        setErrors({}); //just for testing without checking
     
         // Retornar si no hay errores
         return Object.keys(newErrors).length === 0;
