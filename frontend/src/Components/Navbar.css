@@ -6,7 +6,7 @@
     height: 4rem;
     /*border-bottom: 2px var(--highlight1) solid;*/
     color: var(--font-color1);
-    background-color: var(--background-contrast);
+    background-color: var(--background-contrast3);
     box-shadow: 0px 10px 10px rgb(0, 0, 0);
     position: sticky;
     top: 0;
@@ -14,19 +14,45 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.home_button{
+    width: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--font-color1);
+    font-size: 20pt;
+}
+
 
 .profile_text{
     margin: 5% 0 2% 0;   
 }
 
+.menu_title{
+    margin: 0 0 10px 0;   
+    font-weight: 700;
+    font-size: 15pt;
+}
+
+.menu_subtitle{
+    margin: 20px 0 10px 0;   
+    font-weight: 700;
+    font-size: 15pt;
+}
+
+
 .panel_roundbutton{
     width: 100%;
     text-decoration: none;
     color: var(--font-color1);
-    background-color: var(--background-contrast);
+    background-color: var(--background-contrast3);
     text-align: center;
     padding: 3% 0 3% 0;
     border-radius: 20px;
+    font-weight: 700;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 10pt;
 }
 
 .panel_roundbutton:hover{
@@ -138,20 +164,7 @@ nav ul{
     text-align: center;
 }
 
-.type_content_button{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.type_content_button:hover{
-    cursor: pointer;
-    background-color: var(--highlight2);;
-    border-radius: 10px;
-    box-shadow: 0px 5px 10px var(--highlight2);
-}
 
 .right ul{ 
     width: 100%;
@@ -177,6 +190,11 @@ nav ul{
 }
 
 .rightmenus{
-    color: var(--background-contrast);
+    color: var(--background-contrast3);
     background-color: white;
+}
+
+.rightmenus div{
+    display: flex;
+    flex-direction: column;
 }

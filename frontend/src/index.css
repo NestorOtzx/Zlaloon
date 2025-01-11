@@ -8,17 +8,17 @@
   --font-color7: #414141;
   --font-color8: #202020;
   --background-color: rgb(46, 46, 54);
-  --background-contrast: rgb(27, 27, 27);
+  --background-contrast1: rgb(44, 44, 50);
+  --background-contrast2: rgb(40, 40, 45);
+  --background-contrast3: rgb(27, 27, 27);
   --highlight1: rgb(74, 74, 74);
   --highlight2: rgb(42, 42, 42);
+  --highlight3: rgb(255, 128, 0);
   --error1: #df0e49;
   --error2: #ff0000;
-
 }
 html, body, #root{
   margin: 0!important;
-  height: 100%;
-  width: 100%;
 }
 body{
   

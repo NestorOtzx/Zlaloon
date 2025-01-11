@@ -1,5 +1,10 @@
 .rightpanel{
-    width: 25%;
-    height: 100%;
     z-index: 10;
+    /*border: 2px black solid;*/
+}
+
+.rightcontent{
+    /*
+    position: sticky;
+    top:4rem;*/
 }

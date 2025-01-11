@@ -74,3 +74,13 @@ exports.loginController = async (req, res) => {
     res.status(500).json({error: err.message});
   }
 }
+
+exports.logoutController = async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ error: "No se pudo cerrar la sesión" });
+    }
+    res.clearCookie("connect.sid"); // Limpiar la cookie de sesión
+    res.status(200).json({ message: "Sesión cerrada exitosamente" });
+  });
+}

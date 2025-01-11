@@ -1,12 +1,14 @@
 
 import React, {useState, useEffect, useRef} from "react";
+import { useDispatch, useSelector } from 'react-redux'; 
 import {Link} from "react-router-dom";
 import Roundmenu from "./Roundmenu";
 import Togglebutton from "./Togglebutton";
+import LogoutButton from "./LogoutButton";
 import './Navbar.css';
 
 
-export default function Navbar()
+export default function Navbar(props)
 {
     const panelsRef = useRef(null);
     const buttonsRef = useRef(null); 
@@ -15,6 +17,8 @@ export default function Navbar()
     const [b_settings, setSettings] = useState(false);
     const [b_messages, setMessages] = useState(false);
     const [b_notifications, setNotifications] = useState(false);
+
+    const userdata = useSelector((state) => state.userdata);
 
     const setPanels = (val) =>{
         setProfile(val); setSettings(val); setMessages(val); setNotifications(val);
@@ -26,8 +30,9 @@ export default function Navbar()
     }
 
     useEffect(() => {
-
+        
         const handleClickOutside = (event) => {
+            console.log("user data xd : ", userdata);
             console.log("buttons ref: ", buttonsRef.current);
             console.log("panels:", panelsRef.current);
             if (panelsRef.current && !panelsRef.current.contains(event.target) && !buttonsRef.current.contains(event.target)){
@@ -49,17 +54,14 @@ export default function Navbar()
         <div className= "navbar">
             <nav>
                 <div className = "left">
-                    <i className="fa-solid fa-z"></i>
+                    <Link to = "/" className="home_button"><i className="fa-solid fa-z"></i></Link>
                     <form>
-                        <input placeholder='Buscar'></input>
+                        <input placeholder='Search'></input>
                         <button><i className="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
                 <div className = "center">
-                    <ul>
-                        <li><span className = "type_content_button">Para ti</span></li>
-                        <li><span className = "type_content_button">Seguidos</span></li>
-                    </ul>
+                    {props.center}
                 </div>
                 <div  className = "right">
                     <ul ref = {buttonsRef}>
@@ -73,28 +75,40 @@ export default function Navbar()
 
             {b_profile && (
             <Roundmenu ref = {panelsRef} style={{width: "300px", float: "right", color: "black"}} className = "rightmenus">
-                <h2>Perfil</h2>
-                <span className="profile_text">No estás logeado</span>
-                <Link to = "/signup" className="panel_roundbutton">Registrarse</Link>
-                <span className="profile_text">¿Ya tienes una cuenta?</span>
-                <Link to = "/login" className="panel_roundbutton">Iniciar sesión</Link>
+                <span className="menu_title">Perfil</span>
+                {
+                    userdata.loggedin == true ?
+                    <div>
+                        <Link to = {"/"+userdata.username} className="panel_roundbutton">View profile</Link>
+                        <span className="menu_subtitle">{userdata.username}</span>
+                        <LogoutButton className="panel_roundbutton">Log out</LogoutButton>
+                    </div>
+                    :
+                    <div>
+                        <span className="profile_text">You are not logged in</span>
+                        <Link to = "/signup" className="panel_roundbutton">Sign in</Link>
+                        <span className="profile_text">Already have an account?</span>
+                        <Link to = "/login" className="panel_roundbutton">Log in</Link>
+                    </div>
+                }
+                
             </Roundmenu>
             )}
             {b_settings && (
             <Roundmenu ref = {panelsRef} style={{width: "400px", float: "right"}} className = "rightmenus">
-                <h2>Configuración</h2>
-                <label>Modo oscuro</label>
+                <span className="menu_title">Settings</span>
+                <label>Dark mode</label>
                 <input type="checkbox"></input>
             </Roundmenu>
             )}
             {b_messages && (
             <Roundmenu ref = {panelsRef} style={{width: "500px", float: "right"}} className = "rightmenus">
-                <h2>Mensajes</h2>
+                <span className="menu_title">Messages</span>
             </Roundmenu>
             )}
             {b_notifications && (
             <Roundmenu ref = {panelsRef} style={{width: "350px", float: "right"}} className = "rightmenus">
-                <h2>Notificaciones</h2>
+                <span className="menu_title">Notifications</span>
             </Roundmenu>
             )}
         </div>

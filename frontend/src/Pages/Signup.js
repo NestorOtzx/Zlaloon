@@ -1,8 +1,8 @@
 import Roundmenu from "../Components/Roundmenu";
 import {Outlet, Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import './Authentication.css';  
 import { useState } from "react";
+import './Authentication.css';  
 
 export default function Signup(){
     const [userdata, setUserData] = useState({username: "", email:"", password:"", rpassword:""});
@@ -89,7 +89,8 @@ export default function Signup(){
                         </ul>
 
                         <div className = "auth_deco_line2"></div>
-                        <button type="submit">Registrarse</button>                        
+                        <button type="submit">Registrarse</button>
+                        <span className = "footermessage">¿Ya tiene una cuenta? <Link className = "footerlink" to = '/login'> Inicie sesión</Link></span>                        
                     </form> 
                 </div>
             </Roundmenu>

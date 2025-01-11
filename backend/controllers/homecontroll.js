@@ -11,3 +11,4 @@ exports.home = (req, res) =>
         res.status(400).json({loggedin: false});
     }
 }
+

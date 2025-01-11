@@ -1,0 +1,31 @@
+
+.loadingblock{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 40px;
+}
+
+.loadingicon{
+    animation: spin 1s linear infinite;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.nomoreposts{
+    font-size: 4pt;
+    color: var(--background-contrast3);
+}
+
+@keyframes spin {
+    from {
+      transform: rotate(0deg); /* Empieza desde 0 grados */
+    }
+    to {
+      transform: rotate(360deg); /* Gira hasta 360 grados */
+    }
+  }

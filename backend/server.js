@@ -34,8 +34,10 @@ app.use(
 //Rutas
 const authroutes = require('./routes/authroutes');
 const homeroutes = require('./routes/homeroutes');
+const postroutes = require('./routes/postroutes');
 app.use('/', authroutes);
 app.use('/', homeroutes);
+app.use('/', postroutes);
 
 
 

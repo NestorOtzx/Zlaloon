@@ -53,7 +53,8 @@ export default function Login(){
                         </ul>
 
                         <div className = "auth_deco_line2"></div>
-                        <button type="submit">Ingresar</button>                        
+                        <button type="submit">Ingresar</button>
+                        <span className = "footermessage">¿No tiene una cuenta? <Link className = "footerlink" to = '/signup'> Registrese</Link></span>                                          
                     </form> 
                 </div>
             </Roundmenu>
