@@ -1,15 +1,22 @@
 import '../Components/Post'
+import '../Components/UserBlock'
 import Post from '../Components/Post';
+import UserBlock from '../Components/UserBlock';
 
 export default function Content(props)
 {
-    const posts = [];
+    const content = [];
 
-    if (props.posts)
+    if (props.content)
     {
-        for(let i = 0; i<props.posts.length; i++)
+        for(let i = 0; i<props.content.length; i++)
         {
-            posts.push(<Post key = {i} data = {props.posts[i]}></Post>);
+            if (props.contentType === "post")
+            {
+                content.push(<Post key = {i} data = {props.content[i]}></Post>);
+            }else if (props.contentType === "user"){
+                content.push(<UserBlock key = {i} data = {props.content[i]}></UserBlock>);
+            }
         }
     }
     
@@ -17,7 +24,7 @@ export default function Content(props)
     return (
         <div className="content">
             {
-                posts
+                content
             }
         </div>
     );

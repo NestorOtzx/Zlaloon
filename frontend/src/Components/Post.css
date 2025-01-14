@@ -95,6 +95,10 @@
     color: inherit;
 }
 
+.postuseroptionmarked{
+    background-color: var(--background-contrast2);
+}
+
 .postuseroption:hover{
-    background-color: var(--background-contrast1);
+    background-color: var(--background-contrast2);
 }

@@ -165,6 +165,32 @@ nav ul{
 }
 
 
+.centercontent_button, .centercontent_button_selected{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--font-color1);
+    background-color: var(--background-contrast);
+    border-style: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 700;
+    font-size: 12pt;
+}
+
+.centercontent_button:hover{
+    cursor: pointer;
+    background-color: var(--highlight2);
+    box-shadow: 0px 5px 10px -2px var(--highlight2);
+}
+
+.centercontent_button_selected{
+    background-color: var(--highlight4);
+    box-shadow: 0px 5px 10px -2px var(--highlight4);
+}
+
 
 .right ul{ 
     width: 100%;

@@ -1,7 +1,7 @@
 
 import React, {useState, useEffect, useRef} from "react";
 import { useDispatch, useSelector } from 'react-redux'; 
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Roundmenu from "./Roundmenu";
 import Togglebutton from "./Togglebutton";
 import LogoutButton from "./LogoutButton";
@@ -10,6 +10,8 @@ import './Navbar.css';
 
 export default function Navbar(props)
 {
+    const navigate = useNavigate();
+    const [find, setFind] = useState(''); 
     const panelsRef = useRef(null);
     const buttonsRef = useRef(null); 
 
@@ -19,6 +21,17 @@ export default function Navbar(props)
     const [b_notifications, setNotifications] = useState(false);
 
     const userdata = useSelector((state) => state.userdata);
+
+    const handleFindChange = (event) => {
+        setFind(event.target.value); // Actualizar el estado con el valor del input
+    };
+
+    const OnSubmitFind = (e) =>
+    {
+        e.preventDefault();
+        navigate(`/find?query=${find}`);
+        window.location.reload();
+    }
 
     const setPanels = (val) =>{
         setProfile(val); setSettings(val); setMessages(val); setNotifications(val);
@@ -49,15 +62,16 @@ export default function Navbar(props)
             document.removeEventListener("mouseup", handleClickOutside);
         }
     },[]);
+    
 
     return(
         <div className= "navbar">
             <nav>
                 <div className = "left">
                     <Link to = "/" className="home_button"><i className="fa-solid fa-z"></i></Link>
-                    <form>
-                        <input placeholder='Search'></input>
-                        <button><i className="fa-solid fa-magnifying-glass"></i></button>
+                    <form onSubmit={OnSubmitFind}>
+                        <input placeholder='Search' value = {find} onChange={handleFindChange}></input>
+                        <button type="submit"><i className="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
                 <div className = "center">

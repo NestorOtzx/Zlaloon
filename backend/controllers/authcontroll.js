@@ -23,6 +23,7 @@ exports.signUpController = async (req, res) => {
         const result = await users.insertOne(userdata);
         //Session management
         req.session.username = userdata.username;
+        req.session.userid = userdata._id;
         res.status(201).json({message: `Usuario registrado con exito`});
       }
       
@@ -47,6 +48,7 @@ exports.loginController = async (req, res) => {
       console.log("Ingresando con username");
       user = await users.findOne({username: userdata.username}); 
     }
+    userdata._id = user._id;
 
     if (!user)
     {
@@ -67,6 +69,8 @@ exports.loginController = async (req, res) => {
     else{
       //Session management
       req.session.username = userdata.username;
+      req.session.userid = userdata._id;
+      console.log("USUARIO LOGEADO, REQ: ", req.session);
       res.status(201).json({message: `Usuario logeado con exito`});
     }
     

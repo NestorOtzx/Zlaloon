@@ -18,24 +18,3 @@
     flex-direction: column;
 }
 
-.centercontent_button{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: var(--font-color1);
-    background-color: var(--background-contrast);
-    border-style: none;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-weight: 700;
-    font-size: 12pt;
-}
-
-.centercontent_button:hover{
-    cursor: pointer;
-    background-color: var(--highlight2);;
-    border-radius: 10px;
-    box-shadow: 0px 5px 10px var(--highlight2);
-}

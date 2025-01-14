@@ -5,32 +5,36 @@ import React, { useState, useEffect, useRef} from 'react';
 
 export default function ContentPage(props)
 {
-    const [posts, setPosts] = useState([]); // Estado para almacenar los datos
+    const [content, setContent] = useState([]); // Estado para almacenar los datos
     const [loading, setLoading] = useState(true); // Estado para manejar el indicador de carga
-    const [newPosts, setNewPosts] = useState(true);
+    const [newContent, setNewContent] = useState(true);
     const [errors, setErrors] = useState(null); // Estado para manejar errores
-    const [lastPostID, setLastPost] = useState('');
+    const [lastID, setLast] = useState('');
     const loadPostsRef = useRef();
     
-    const getPosts = async () => {
-        if (!newPosts) {return; }
+    const getContent = async () => {
+        if (!newContent) {return; }
         setLoading(true);
         try {
-            console.log("Try get posts");
-            if (lastPostID != '')
+            const newParams = props.params;
+            newParams.params.limit = props.params.params.firstloadlimit;
+
+            if (lastID != '')
             {
-                props.params.params.cursor = lastPostID;
+                newParams.params.cursor = lastID;
+                newParams.params.limit = props.params.params.loadmorelimit;
             }
-            const ans = await axios.get(props.query, props.params);
+
+            const ans = await axios.get(props.query, newParams);
             
-            setPosts((prev) => [...prev, ...(ans.data)]);
+            setContent((prev) => [...prev, ...(ans.data)]);
             if (ans.data.length > 0)
             {
                 console.log("Posts getted");
-                setLastPost(ans.data[ans.data.length-1]._id);
+                setLast(ans.data[ans.data.length-1]._id);
             }else{
                 console.log("POSTS OVER");
-                setNewPosts(false);
+                setNewContent(false);
             }
         } catch (error) {
             if (error.response) {
@@ -56,7 +60,7 @@ export default function ContentPage(props)
             console.log("Observe: ", loading, entries[0].isIntersecting );
             if (entries[0].isIntersecting && !loading) {
                 console.log("Get posts call: ", loading);
-                getPosts();
+                getContent();
             }
             },
             { threshold: 0.5 }
@@ -71,7 +75,7 @@ export default function ContentPage(props)
     }, [loading]);
 
     useEffect(() => {
-        getPosts();
+        getContent();
     }, []);
     
 
@@ -79,30 +83,27 @@ export default function ContentPage(props)
     <div>
         {errors && errors.username && 
             <div>
-                <span>The account {props.params.params.username} does not exists</span>
+                <span>{errors.username}</span>
             </div>    
         }{!errors &&
-            <Content posts = {posts}></Content>
-            
+            <Content content = {content} contentType = {props.contentType}></Content>
         }
-        {
-            /*
-            <div ref={loadPostsRef} className="loadingblock">
-                <p>Loading more posts</p>
-            </div>
-            */
-        }
-        {!errors && newPosts &&
+        {!errors && newContent && (!props.manualLoad || loading)&&
         
             <div ref={loadPostsRef} className="loadingblock">
-                <i class="fa-solid fa-spinner loadingicon"></i>
+                <i className="fa-solid fa-spinner loadingicon"></i>
             </div>
         }
-        {!errors && !newPosts &&
+        {!errors && newContent && (props.manualLoad && !loading)&&
+            <button className="loadingblock" onClick={getContent}>
+                <span className = "morecontentbutton">More...</span>
+            </button>
+        }
+        {!errors && !newContent &&
             <div className="loadingblock">
-                <i class="fa-solid fa-circle nomoreposts"></i>
-                <i class="fa-solid fa-circle nomoreposts"></i>
-                <i class="fa-solid fa-circle nomoreposts"></i>
+                <i className="fa-solid fa-circle nomoreposts"></i>
+                <i className="fa-solid fa-circle nomoreposts"></i>
+                <i className="fa-solid fa-circle nomoreposts"></i>
             </div>
         } 
         
