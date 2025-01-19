@@ -41,9 +41,11 @@ export default function Post(props)
         return ans;
     }
 
+
     const [mylike, setMyLike] = useState(props.data.likers ? props.data.likers.length: 0);
     const [mydislike, setMyDislike] =  useState(props.data.dislikers ? props.data.dislikers.length: 0);
-    
+    const [myshares, setMyShare] =  useState(props.data.sharers ? props.data.sharers.length: 0);
+
     const [loading, setLoading] = useState(false);
     
     const [errors, setErrors] = useState(null);
@@ -51,8 +53,6 @@ export default function Post(props)
 
     const [userliked, setUserLiked] = useState(getLikedByUser());
     const [userdisliked, setUserDisliked] = useState(getDislikedByUser());
-
-    
 
     const LikeDislikeButton = async (like)=>
     {
@@ -118,8 +118,37 @@ export default function Post(props)
         }
     }
 
+    const ShareButton = async ()=>
+    {
+        if (loading) { return; }
+        console.log("shared CLICKED!!");
+        const data = {username: userdata.username, postid: props.data._id};
+        console.log("will add like/dislike, data: ", data);
+
+        try {
+            let response;
+            setLoading(true);
+            setMyShare(myshares+1);
+            response = await axios.post("http://localhost:5000/addshare", data, { withCredentials: true });
+        } catch (error) {
+            if (error.response) {
+                console.error("Client error:", error.response.data);
+            } else if (error.request) {
+                console.error("No response from server:", error.request);
+                alert("Error: No hubo respuesta del servidor.");
+            } else {
+                console.error("Error making post:", error.message);
+                alert("Error: " + error.message);
+            }
+            //setErrors(error.message); 
+        } finally {
+            setLoading(false);
+            //window.location.reload();
+        }
+    }
+
     return (
-        <div className="postcontainer">
+        <div className="postcontainer" onClick={(event) => event.stopPropagation()}>
             <div className="postvalues">
                 <div className = "postinfo">
                     <div className = "postuserinfo">
@@ -131,9 +160,18 @@ export default function Post(props)
                     </div>
                 </div>
                 <div className = "postcontent">
-                    <span>{props.data.content}</span>
+                    {props.data.post_type == "post" && props.data.content &&
+                    <div>
+                        <span>{props.data.content.message}</span>    
+                    </div>}
+                    {props.data.post_type == "share" && props.data.content &&
+                    <div className='sharecontent'>
+                        <Post data = {props.data.content.sharedpost} showoptions = {false}></Post>
+                    </div>}
+                    
                 </div>
             </div>
+            {props.showoptions && 
             <ul className="postuseroptions">
                 <li>
                     <button className='postuseroption'>
@@ -154,13 +192,13 @@ export default function Post(props)
                     </button>
                 </li>
                 <li>
-                    <button className='postuseroption'>
-                        <span>0</span>
+                    <button className = 'postuseroption' onClick={() => {ShareButton()}}>
+                        <span>{myshares}</span>
                         <i className="fa-solid fa-share"></i>
                     </button>
                 </li>
             </ul>
-            
+            }
         </div>
     )
 }

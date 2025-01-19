@@ -8,6 +8,8 @@ router.post('/addlike', postcontroller.addlike);
 router.post('/adddislike', postcontroller.adddislike);
 router.post('/removelike', postcontroller.removelike);
 router.post('/removedislike', postcontroller.removedislike);
+router.post('/addshare', postcontroller.addshare);
+router.post('/removeshare', postcontroller.removeshare);
 
 
 router.get('/getprofileposts', postcontroller.getprofileposts);

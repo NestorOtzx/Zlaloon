@@ -2,7 +2,6 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config();
 
 const uri = process.env.MONGO_DB_URI;
-console.log(uri);
 
 //inicializar el cliente
 const client = new MongoClient(uri);

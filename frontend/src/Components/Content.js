@@ -13,7 +13,7 @@ export default function Content(props)
         {
             if (props.contentType === "post")
             {
-                content.push(<Post key = {i} data = {props.content[i]}></Post>);
+                content.push(<Post key = {i} data = {props.content[i] } showoptions = {true}></Post>);
             }else if (props.contentType === "user"){
                 content.push(<UserBlock key = {i} data = {props.content[i]}></UserBlock>);
             }
