@@ -157,6 +157,9 @@ export default function Post(props)
                     </div>
                     <div className = "basicinfo">
                         <span>{formatDateTime(props.data.date)}</span>
+                        {props.showoptions &&
+                            <button className='postactions'><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                        }
                     </div>
                 </div>
                 <div className = "postcontent">

@@ -39,11 +39,12 @@
 
 }
 
-.postbasicinfo{
+.basicinfo{
     flex:1;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    gap: 30px;
 }
 
 .postdate{
@@ -108,4 +109,14 @@
 
 .postuseroption:hover{
     background-color: var(--background-contrast2);
+}
+
+.postactions{
+    background-color: var(--background-color);
+    border-style: none;
+    color: white;
+
+
+    font-weight: 900;
+    font-size: 15pt;
 }
