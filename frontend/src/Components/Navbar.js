@@ -14,11 +14,26 @@ export default function Navbar(props)
     const [find, setFind] = useState(''); 
     const panelsRef = useRef(null);
     const buttonsRef = useRef(null); 
+    const searchInputRef = useRef(null);
+
+    //search button stuff
+    const [search, setSearch] = useState(false);
+    const handleSearchClick = () => {
+        setSearch(true)
+        setTimeout(() => {
+        searchInputRef.current?.focus(); // Enfoca el segundo input
+        }, 0); // Espera al siguiente render
+    };
+
+    const handleSearchBlur = () => {
+        setSearch(false); // Cuando se pierde foco en el segundo, reaparece el primero
+    };
 
     const [b_profile, setProfile] = useState(false);
     const [b_settings, setSettings] = useState(false);
     const [b_messages, setMessages] = useState(false);
     const [b_notifications, setNotifications] = useState(false);
+    const [b_options, setOptions] = useState(false);
 
     const userdata = useSelector((state) => state.userdata);
 
@@ -34,7 +49,7 @@ export default function Navbar(props)
     }
 
     const setPanels = (val) =>{
-        setProfile(val); setSettings(val); setMessages(val); setNotifications(val);
+        setProfile(val); setSettings(val); setMessages(val); setNotifications(val); setOptions(val);
     }
 
     const setPanel = (val, setPanelFunc) =>{
@@ -43,12 +58,21 @@ export default function Navbar(props)
     }
 
     useEffect(() => {
-        
+        setSearch(false)
+        const handleResize = () => {
+            if (window.innerWidth > 750){
+                setOptions(false);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+        handleResize();
+
         const handleClickOutside = (event) => {
             console.log("user data xd : ", userdata);
             console.log("buttons ref: ", buttonsRef.current);
             console.log("panels:", panelsRef.current);
-            if (panelsRef.current && !panelsRef.current.contains(event.target) && !buttonsRef.current.contains(event.target)){
+            if (panelsRef.current && !panelsRef.current.contains(event.target) && buttonsRef.current && !buttonsRef.current.contains(event.target)){
                 setPanels(false);
                 console.log("turn off panel");
             }
@@ -60,25 +84,37 @@ export default function Navbar(props)
         return () => {
             console.log("borrado");
             document.removeEventListener("mouseup", handleClickOutside);
+            window.removeEventListener("resize", handleResize);
         }
     },[]);
+
     
 
     return(
         <div className= "navbar">
             <nav>
-                <div className = "left">
+                <div className = "nav-left">
                     <Link to = "/" className="home_button"><i className="fa-solid fa-z"></i></Link>
-                    <form onSubmit={OnSubmitFind}>
-                        <input placeholder='Search' value = {find} onChange={handleFindChange}></input>
-                        <button type="submit"><i className="fa-solid fa-magnifying-glass"></i></button>
-                    </form>
+                    { search ? 
+                        <form className="search-form"onSubmit={OnSubmitFind}>
+                            <input ref={searchInputRef} placeholder='Search' value = {find} onChange={handleFindChange} onBlur={handleSearchBlur}></input>
+                            <button type="submit"><i className="fa-solid fa-magnifying-glass"></i></button>
+                        </form>
+                        :
+                        <div className="search-form-placeholder">
+                            <input placeholder='Search' onClick={handleSearchClick}></input>
+                            <button onClick={handleSearchClick}><i className="fa-solid fa-magnifying-glass"></i></button>
+                        </div>
+                    }
                 </div>
-                <div className = "center">
+                <div className = "nav-center">
                     {props.center}
                 </div>
-                <div  className = "right">
-                    <ul ref = {buttonsRef}>
+                <div className = "nav-right">
+                    <ul className="nav-right-menu-button" ref = {buttonsRef}>
+                        <li><Togglebutton onClick={() => setPanel(!b_options, setOptions)}><i class="fa-solid fa-grip-lines"></i></Togglebutton></li>
+                    </ul>
+                    <ul className = "nav-right-menu" ref = {buttonsRef}>
                         <li><Togglebutton onClick={() => setPanel(!b_notifications, setNotifications)}><i className="fas fa-bell"></i></Togglebutton></li>
                         <li><Togglebutton onClick={() => setPanel(!b_messages, setMessages)}><i className="fa-solid fa-message"></i></Togglebutton></li>
                         <li><Togglebutton onClick={() => setPanel(!b_settings, setSettings)}><i className="fa-solid fa-gear"></i></Togglebutton></li>
@@ -123,6 +159,16 @@ export default function Navbar(props)
             {b_notifications && (
             <Roundmenu ref = {panelsRef} style={{width: "350px", float: "right"}} className = "rightmenus">
                 <span className="menu_title">Notifications</span>
+            </Roundmenu>
+            )}
+            {b_options && (
+            <Roundmenu ref = {panelsRef} style={{width: "75px", float: "right"}} className = "rightmenus">
+                <ul className = "nav-right-menu-vertical">
+                    <li><Togglebutton onClick={() => setPanel(!b_notifications, setNotifications)}><i className="fas fa-bell"></i></Togglebutton></li>
+                    <li><Togglebutton onClick={() => setPanel(!b_messages, setMessages)}><i className="fa-solid fa-message"></i></Togglebutton></li>
+                    <li><Togglebutton onClick={() => setPanel(!b_settings, setSettings)}><i className="fa-solid fa-gear"></i></Togglebutton></li>
+                    <li><Togglebutton onClick={() => setPanel(!b_profile, setProfile)}><i className="fa-solid fa-user"></i></Togglebutton></li>
+                </ul>
             </Roundmenu>
             )}
         </div>

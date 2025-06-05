@@ -49,7 +49,7 @@ exports.loginController = async (req, res) => {
       user = await users.findOne({username: userdata.username}); 
     }
     userdata._id = user._id;
-
+    console.log("here 1");
     if (!user)
     {
       errors.username = 'El nombre de usuario, correo, o contraseña no coinciden';

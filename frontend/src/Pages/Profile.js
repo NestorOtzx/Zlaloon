@@ -1,4 +1,5 @@
 import './Profile.css';
+import './Home.css';
 import Navbar from "../Components/Navbar";
 import ContentPage from '../Components/ContentPage';
 import axios from 'axios';

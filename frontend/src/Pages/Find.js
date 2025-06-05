@@ -1,4 +1,5 @@
 import './Find.css';
+import './Home.css';
 import Navbar from "../Components/Navbar";
 import ContentPage from '../Components/ContentPage';
 import { useSearchParams } from "react-router-dom";

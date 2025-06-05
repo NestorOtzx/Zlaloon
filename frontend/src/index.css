@@ -1,22 +1,12 @@
 :root {
-  --font-color1: #efefef;
-  --font-color2: #e6e6e6;
-  --font-color3: #c3c3c3;
-  --font-color4: #b5b5b5;
-  --font-color5: #7c7c7c;
-  --font-color6: #626262;
-  --font-color7: #414141;
-  --font-color8: #202020;
-  --background-color: rgb(46, 46, 54);
-  --background-contrast1: rgb(44, 44, 50);
-  --background-contrast2: rgb(40, 40, 45);
-  --background-contrast3: rgb(27, 27, 27);
-  --highlight1: rgb(74, 74, 74);
-  --highlight2: rgb(42, 42, 42);
-  --highlight3: rgb(255, 128, 0);
-  --highlight4: rgb(38, 38, 38);
-  --error1: #df0e49;
-  --error2: #ff0000;
+    --navbar-color: rgba(255, 255, 255, 0.6);
+    --navbar-color-solid: rgb(228, 228, 228);
+    --navbar-search-button: rgba(197, 197, 197, 0.6);
+    --navbar-shadow-color:rgba(0, 0, 0, 0.1);
+    --postcreator-color: #f6f6f6;
+    --background-color: #e5e5e5;
+    --primary-color: #c50000;
+    --round-menu-color: rgba(255, 255, 255, 0.9);
 }
 html, body, #root{
   margin: 0!important;

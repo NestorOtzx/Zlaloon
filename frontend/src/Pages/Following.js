@@ -1,4 +1,5 @@
 import './Following.css';
+import './Home.css';
 import Navbar from "../Components/Navbar";
 import {useParams} from 'react-router-dom';
 import ContentPage from '../Components/ContentPage';
