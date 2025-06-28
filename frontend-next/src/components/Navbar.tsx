@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Menu, ChevronDown } from 'lucide-react'
 import DarkLightTheme from './DarkLightTheme'
 
-export default function NavBar() {
+export default function Navbar() {
   const { user, isAuthenticated, loading } = useAuth()
   const [query, setQuery] = useState('')
   const [showInput, setShowInput] = useState(false)
@@ -72,7 +72,6 @@ export default function NavBar() {
       transition={{ duration: 0.4 }}
       className="pl-2 fixed top-0 left-0 w-full h-[50px] z-50 
         backdrop-blur-2xl
-        opacity-95 hover:opacity-100 transition-opacity duration-300
         border-b-2 border-primary-light dark:border-primary-dark bg-navbar-light dark:bg-navbar-dark
         flex justify-between items-center"
     >
@@ -84,7 +83,12 @@ export default function NavBar() {
           layout
           transition={{ layout: { duration: 0.3, ease: 'easeInOut' } }}
         >
-          <span className="pb-1 text-3xl font-extrabold text-text-light dark:text-text-dark select-none align-center flex flex-col justify-center">Z</span>
+          <span
+            onClick={() => router.push('/')}
+            className="cursor-pointer pb-1 text-3xl font-extrabold text-text-light dark:text-text-dark select-none align-center flex flex-col justify-center"
+          >
+            Z
+          </span>
 
           <AnimatePresence mode="wait">
             {showInput && (

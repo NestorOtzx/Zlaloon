@@ -76,7 +76,7 @@ export default function PostCreator()
             <div>
                 <div className = "postinfo">
                     <div className = "postuserinfo">
-                        <img className = "postprofilepicture" src = "images/nopp.png"></img>            
+                        <img className = "postprofilepicture" src = "https://placehold.co/400x400"></img>            
                         <span className = "postusername">{userdata.username}</span>
                     </div>
                 </div>

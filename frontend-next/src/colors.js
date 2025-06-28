@@ -1,6 +1,10 @@
 module.exports = {
+  dom:{
+    light: "#ffffff",
+    dark: "#000000",
+  },
   primary: {
-    light: "#ffaa00",
+    light: "#ff0000",
     
     dark: "#ffaa00",
   },
@@ -9,11 +13,13 @@ module.exports = {
     dark: "#3F51B5",
   },
   background: {
-    light: "#ffffff",
-    lightContrast: "#dfdfdf",
-    lightGrad: "#ffae00",
+    light: "#fafafa",
+    lightContrast: "#f0f0f0",
+    lightContrast1: "#a0a0a0",
+    lightGrad: "#a93232",
     dark: "#000000",
-    darkContrast: "#1f1f1f",
+    darkContrast: "#0f0f0f",
+    darkContrast1: "#2f2f2f",
     darkGrad: "#ffae00",
   },
   text: {

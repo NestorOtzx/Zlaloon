@@ -27,7 +27,7 @@ exports.makepost = async (req, res) => {
       else{
         console.log("will create post!!");
         const result = await posts.insertOne(postdata);
-        console.log("post created!!");
+        console.log("post created!! ", result);
         res.status(201).json({message: `Post created!`});
       }
 
@@ -368,29 +368,53 @@ exports.getprofileposts = async (req, res) => {
 }
 
 exports.getpostslike = async (req, res) => {
-    const data = req.query;
-    console.log("--------------posts-----------");
-    console.log(data);
-    const db = database.getCurrentInstance().db("ZLALOON");
-    const posts = db.collection("Posts");
-    try{
-        const pattern = data.pattern;
-        const limit = data.limit;
-        const cursor = data.cursor;
+  const data = req.query;
+  console.log("--------------GET POSTS LIKE-----------");
+  console.log(data);
+  const db = database.getCurrentInstance().db("ZLALOON");
+  const posts = db.collection("Posts");
 
-        console.log("Will search for ", pattern);
-        const query = { $or:  [{username: { $regex: pattern, $options: "i" } },{content: { $regex: pattern, $options: "i" }}]};
-    
-        if (cursor)
-        {
-            console.log("cursor was given: ", cursor);
-            query._id = {$lt: ObjectId.createFromHexString(cursor)};
-        }
-        const postsLike = await posts.find(query).sort({date:-1}).limit(parseInt(limit)).toArray();
-        console.log("Users like ", pattern, ": ", postsLike);
-        res.status(200).json(postsLike);
-    }catch (error)
-    {
-        res.status(500).json({error: "error getting posts like pattern"});
+  try {
+    const pattern = data.pattern;
+    const limit = data.limit;
+    const cursor = data.cursor;
+
+    console.log("Will search for ", pattern);
+
+    const query = {
+      $or: [
+        { username: { $regex: pattern, $options: "i" } },
+        { "content.message": { $regex: pattern, $options: "i" } }
+      ]
+    };
+
+    if (cursor) {
+      console.log("cursor was given: ", cursor);
+      query._id = { $lt: ObjectId.createFromHexString(cursor) };
     }
-}
+
+    const postsLike = await posts
+      .find(query)
+      .sort({ date: -1 })
+      .limit(parseInt(limit))
+      .toArray();
+
+    // Verifica si es un post compartido
+    for (let i = 0; i < postsLike.length; i++) {
+      const post = postsLike[i];
+      if (post.post_type === "share" && post.postref_id) {
+        const shared = await posts.findOne({ _id: post.postref_id });
+        if (!post.content) {
+          post.content = {};
+        }
+        post.content.sharedpost = shared || null;
+        console.log("shared content injected: ", post.content.sharedpost);
+      }
+    }
+
+    res.status(200).json(postsLike);
+  } catch (error) {
+    console.error("Error fetching posts like:", error);
+    res.status(500).json({ error: "error getting posts like pattern" });
+  }
+};
