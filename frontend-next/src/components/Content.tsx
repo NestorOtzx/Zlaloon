@@ -1,26 +1,19 @@
 "use client"
 
 import { useEffect, useState, useRef, useCallback } from "react"
+import Post from "./Post"
+import { PostType } from "@/types/types"
 
-type Post = {
-  _id: string
-  username: string
-  date: string
-  post_type: string
-  content: {
-    message?: string
-    sharedpost?: Post | null
-  }
-}
 
 type ContentProps = {
   query: string
   pattern?: string
+  username?: string
   limit?: number
 }
 
-export default function Content({ query, pattern = "", limit = 10 }: ContentProps) {
-  const [posts, setPosts] = useState<Post[]>([])
+export default function Content({ query, pattern = "", username="",limit = 10 }: ContentProps) {
+  const [posts, setPosts] = useState<PostType[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(true)
@@ -35,12 +28,13 @@ export default function Content({ query, pattern = "", limit = 10 }: ContentProp
     try {
       const url = new URL(query)
       url.searchParams.set("pattern", pattern)
+      url.searchParams.set("username", username)
       url.searchParams.set("limit", limit.toString())
       if (cursor) url.searchParams.set("cursor", cursor)
 
       const res = await fetch(url.toString())
       if (!res.ok) throw new Error("Error al obtener posts")
-      const data: Post[] = await res.json()
+      const data: PostType[] = await res.json()
 
       if (data.length === 0) {
         setHasMore(false)
@@ -75,47 +69,9 @@ export default function Content({ query, pattern = "", limit = 10 }: ContentProp
     setHasMore(true)
   }, [pattern])
 
-  // Función para renderizar un post (normal o compartido)
-  const renderPost = (post: Post, isNested = false) => {
-    return (
-      <div
-        key={post._id}
-        className={`
-          ${isNested ? "mt-3" : "mb-4"}
-          border ${isNested ? "border-dashed" : "border-solid"}
-          border-background-lightContrast1 dark:border-background-darkContrast1
-          bg-background-lightContrast dark:bg-background-darkContrast
-          p-4 
-        `}
-      >
-        <div className="text-sm text-gray-500 dark:text-gray-400">
-          {new Date(post.date).toLocaleString()}
-        </div>
-        <div className="font-bold text-lg text-primary-light dark:text-primary-dark">
-          {post.username}
-        </div>
-
-        {post.content?.message && (
-          <div className="mt-2 text-text-light dark:text-text-dark">
-            {post.content.message}
-          </div>
-        )}
-
-        {post.post_type === "share" && post.content?.sharedpost && (
-          <div>
-            <div className="text-sm mt-3 text-gray-500 dark:text-gray-400">
-              Compartido de {post.content.sharedpost.username}
-            </div>
-            {renderPost(post.content.sharedpost, true)}
-          </div>
-        )}
-      </div>
-    )
-  }
-
   return (
     <div className="w-full min-h-[calc(100vh-50px)] h-100% p-4 text-text-light dark:text-text-dark">
-      {posts.map(post => renderPost(post))}
+      {posts.map((post) => <Post key={post._id} post={post} isNested={false}/>)}
 
       {error && (
         <div className="text-red-600 dark:text-red-400 font-semibold">{error}</div>

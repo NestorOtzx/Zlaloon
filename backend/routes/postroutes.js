@@ -11,7 +11,7 @@ router.post('/removedislike', postcontroller.removedislike);
 router.post('/addshare', postcontroller.addshare);
 router.post('/removeshare', postcontroller.removeshare);
 
-
+router.get('/getprofilepost', postcontroller.getprofilepost)
 router.get('/getprofileposts', postcontroller.getprofileposts);
 router.get('/getpostslike', postcontroller.getpostslike);
 

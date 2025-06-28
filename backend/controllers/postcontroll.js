@@ -367,6 +367,46 @@ exports.getprofileposts = async (req, res) => {
     }
 }
 
+exports.getprofilepost = async (req, res) => {
+    const data = req.query;
+    console.log("------------GET POST-------------");
+    console.log(data);
+    const db = database.getCurrentInstance().db("ZLALOON");
+    const posts = db.collection("Posts");
+    const users = db.collection("Users");
+    try{
+        const profilename = data.username;
+        const post_id = data.postid;
+
+        const userdb = await users.findOne({username: profilename});
+
+        if (!userdb)
+        {   
+          res.status(409).json({username: "user does not exist"});    
+        }else{
+            const postquery =  { $and: [{username: profilename}, {_id: {$eq: ObjectId.createFromHexString(post_id)}}]};
+
+            const userPostdb = await posts.findOne(postquery);
+            if (userPostdb.post_type == "share")
+            {
+              let sharedpost = await posts.findOne({_id: userPostdb.postref_id});
+              if (!userPostdb.content)
+              {
+                userPostdb.content = {};
+              }
+              userPostdb.content["sharedpost"] = sharedpost;
+              console.log("content updated: ",  userPostdb);
+            }
+
+            res.status(200).json(userPostdb);
+        }
+    }catch (error)
+    {
+      console.log(error);
+      res.status(500).json({error: "error getting posts"});
+    }
+}
+
 exports.getpostslike = async (req, res) => {
   const data = req.query;
   console.log("--------------GET POSTS LIKE-----------");

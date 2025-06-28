@@ -1,6 +1,6 @@
 'use client'
 
-import useAuth from '@/hooks/useAuth'
+import { useAuth } from '@/context/AuthProvider'
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { signOut } from 'next-auth/react'

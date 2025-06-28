@@ -29,7 +29,7 @@ export const authOptions: AuthOptions = {
 
 
   if (!user) {
-    console.log("❌ No user found")
+    console.log("No user found")
     return null
   }
   console.log(user);
@@ -40,11 +40,11 @@ export const authOptions: AuthOptions = {
   if (!isValid)
     isValid = await compare(credentials!.password, user.password)
   if (!isValid) {
-    console.log("❌ Invalid password")
+    console.log("Invalid password")
     return null
   }
 
-  console.log("✅ Auth success:", {
+  console.log("Auth success:", {
     id: user._id.toString(),
     name: user.name,
     email: user.email

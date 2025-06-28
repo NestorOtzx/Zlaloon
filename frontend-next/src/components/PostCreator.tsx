@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import useAuth from '@/hooks/useAuth'
+import { useAuth } from '@/context/AuthProvider'
 
 export default function PostCreator() {
   const { user, isAuthenticated, loading } = useAuth()
@@ -63,7 +63,7 @@ export default function PostCreator() {
       }
 
       setContent('')
-      router.refresh()
+      window.location.reload()
     } catch (err: any) {
       console.error('Failed to create post:', err)
       alert('Could not submit post.')
@@ -75,7 +75,7 @@ export default function PostCreator() {
   if (loading) return null
 
   return (
-    <div className="w-full bg-background-light dark:bg-background-darkContrast p-4 border-b border-primary-light dark:border-background-darkContrast1">
+    <div className="w-full bg-background-light dark:bg-background-darkContrast p-4 border-b border-t border-primary-light dark:border-background-darkContrast1">
       {isAuthenticated ? (
         <>
           <div className="flex items-center gap-3 mb-3">
