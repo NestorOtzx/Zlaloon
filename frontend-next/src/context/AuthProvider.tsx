@@ -3,8 +3,14 @@
 import { createContext, useContext, ReactNode } from 'react'
 import { useSession } from 'next-auth/react'
 
+type ExtendedUser = {
+  name?: string
+  email?: string
+  _id?: string
+}
+
 type AuthContextType = {
-  user: any
+  user: ExtendedUser | null
   isAuthenticated: boolean
   loading: boolean
 }
@@ -18,10 +24,12 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: session, status } = useSession()
   const loading = status === 'loading'
-  const user = session?.user
+
+  // ⬇️ Forzamos el tipo para que TypeScript reconozca _id
+  const user = session?.user as ExtendedUser | undefined
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading }}>
+    <AuthContext.Provider value={{ user: user ?? null, isAuthenticated: !!user, loading }}>
       {children}
     </AuthContext.Provider>
   )

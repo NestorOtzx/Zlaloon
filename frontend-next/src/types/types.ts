@@ -13,4 +13,15 @@ export type PostType = {
     message?: string
     sharedpost?: PostType | null
   }
+  viewerInteraction?: {
+    liked: boolean
+    disliked: boolean
+    shared: boolean
+  }
+}
+
+export type ProfileType = {
+  _id: string
+  username: string
+  email: string
 }

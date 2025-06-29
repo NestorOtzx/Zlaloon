@@ -4,7 +4,7 @@ import { PostType } from "@/types/types"
 import { useRouter } from "next/navigation"
 import PostDate from './PostDate'
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import useAuth from "@/hooks/useAuth"
 import { ThumbsUp, ThumbsDown, Share2 } from "lucide-react"
 
@@ -16,6 +16,12 @@ export default function Post({ post, isNested }: { post: PostType; isNested: boo
   const [shareActive, setShareActive] = useState(false)
 
   const { user } = useAuth()
+
+  useEffect(() => {
+    setLikeActive(post.viewerInteraction?.liked || false)
+    setDislikeActive(post.viewerInteraction?.disliked || false)
+    setShareActive(post.viewerInteraction?.shared || false)
+  }, [post.viewerInteraction])
 
   const handleClick = () => {
     if (!hoveringNested) {
@@ -43,22 +49,43 @@ export default function Post({ post, isNested }: { post: PostType; isNested: boo
 
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setLikeActive(true)
-    setDislikeActive(false)
-    await sendAction("addlike")
+    if (!user?.name) return
+
+    if (likeActive) {
+      await sendAction("removelike")
+      setLikeActive(false)
+    } else {
+      await sendAction("addlike")
+      setLikeActive(true)
+      if (dislikeActive) setDislikeActive(false)
+    }
   }
 
   const handleDislike = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setDislikeActive(true)
-    setLikeActive(false)
-    await sendAction("adddislike")
+    if (!user?.name) return
+
+    if (dislikeActive) {
+      await sendAction("removedislike")
+      setDislikeActive(false)
+    } else {
+      await sendAction("adddislike")
+      setDislikeActive(true)
+      if (likeActive) setLikeActive(false)
+    }
   }
 
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation()
-    setShareActive(true)
-    await sendAction("addshare")
+    if (!user?.name) return
+
+    if (shareActive) {
+      await sendAction("removeshare")
+      setShareActive(false)
+    } else {
+      await sendAction("addshare")
+      setShareActive(true)
+    }
   }
 
   const containerClass = `
@@ -71,11 +98,7 @@ export default function Post({ post, isNested }: { post: PostType; isNested: boo
   `
 
   return (
-    <div
-      key={post._id}
-      onClick={handleClick}
-      className={containerClass}
-    >
+    <div key={post._id} onClick={handleClick} className={containerClass}>
       <PostDate date={post.date} />
 
       <Link
@@ -112,35 +135,37 @@ export default function Post({ post, isNested }: { post: PostType; isNested: boo
         </div>
       )}
 
-      {/* Action buttons */}
-      <div className="mt-4 flex space-x-4">
-        <button
-          onClick={handleLike}
-          className={`p-2 rounded-full hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors ${
-            likeActive ? 'text-primary-light dark:text-primary-dark' : 'text-gray-500 dark:text-gray-400'
-          }`}
-        >
-          <ThumbsUp size={18} />
-        </button>
+      {/* Action buttons (solo si no es anidado) */}
+      {!isNested && (
+        <div className="mt-4 flex space-x-4">
+          <button
+            onClick={handleLike}
+            className={`p-2 rounded-full hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors ${
+              likeActive ? 'text-primary-light dark:text-primary-dark' : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
+            <ThumbsUp size={18} />
+          </button>
 
-        <button
-          onClick={handleDislike}
-          className={`p-2 rounded-full hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors ${
-            dislikeActive ? 'text-primary-light dark:text-primary-dark' : 'text-gray-500 dark:text-gray-400'
-          }`}
-        >
-          <ThumbsDown size={18} />
-        </button>
+          <button
+            onClick={handleDislike}
+            className={`p-2 rounded-full hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors ${
+              dislikeActive ? 'text-primary-light dark:text-primary-dark' : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
+            <ThumbsDown size={18} />
+          </button>
 
-        <button
-          onClick={handleShare}
-          className={`p-2 rounded-full hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors ${
-            shareActive ? 'text-primary-light dark:text-primary-dark' : 'text-gray-500 dark:text-gray-400'
-          }`}
-        >
-          <Share2 size={18} />
-        </button>
-      </div>
+          <button
+            onClick={handleShare}
+            className={`p-2 rounded-full hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors ${
+              shareActive ? 'text-primary-light dark:text-primary-dark' : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
+            <Share2 size={18} />
+          </button>
+        </div>
+      )}
     </div>
   )
 }

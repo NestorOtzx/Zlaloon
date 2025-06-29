@@ -71,6 +71,10 @@ exports.getfollowers = async (req, res) => {
     }
 }
 
+
+
+
+
 exports.getprofilebyusername = async (req, res) => {
     const data = req.query;
     console.log("-------------------------");
@@ -93,58 +97,6 @@ exports.getprofilebyusername = async (req, res) => {
     }catch (error)
     {
         res.status(500).json({error: "error getting user"});
-    }
-}
-
-exports.getisfollowing = async (req, res) => {
-    const data = req.query;
-    console.log("------------Get is following-------------");
-    console.log(data);
-    const db = database.getCurrentInstance().db("ZLALOON");
-    const users = db.collection("Users");
-    try{
-        console.log("user: ", data.username, " profile: ", data.profilename);
-        const userdata = await users.findOne({username: data.username});
-        const profiledata = await users.findOne({username: data.profilename});
-        
-        console.log("2 user: ", userdata, " profile: ", profiledata);
-
-        if (!userdata)
-        {    
-            console.log(1);
-            res.status(404).json({error: "user not found"});    
-        }else if (!profiledata){
-            console.log(2);
-            res.status(404).json({error: "profile not found"});    
-        }
-        else if (!userdata.following || userdata.following == 0){
-            console.log(3);
-            res.status(200).json({isfollowing:false});    
-        }else{
-            console.log(4);
-            let ans = false;
-            for(let i = 0; i<userdata.following.length; i++)
-            {
-                console.log("comparing: ", userdata.following[i], " with: ", profiledata._id);
-                if (userdata.following[i].equals(profiledata._id)){
-                    console.log("are equal: ", userdata.following[i], " with: ", profiledata._id);
-                    ans = true;
-                    break;
-                }
-            }
-            if (ans)
-            {
-                console.log("isfollowing true");
-                res.status(200).json({isfollowing: true});
-            }else{
-                console.log("isfollowing false");
-                res.status(200).json({isfollowing: false});
-            }
-        }
-    }catch (error)
-    {
-        console.log(error);
-        res.status(500).json({error: "error getting following"});
     }
 }
 
@@ -184,97 +136,104 @@ exports.getprofileslike = async (req, res) => {
 
 
 exports.followprofile = async (req, res) => {
-    console.log("follow body: ", req.body);
-    const postdata = req.body;
-    const client = database.getCurrentInstance()
-    const session = client.startSession();
-    const db = client.db("ZLALOON");
-    const users = db.collection("Users");
+  const { userid, profileid } = req.body;
+  const client = database.getCurrentInstance();
+  const session = client.startSession();
+  const db = client.db("ZLALOON");
+  const users = db.collection("Users");
+  const follows = db.collection("Follows");
 
-    try{
-        let errors = {};
-        const user = await users.findOne({_id:  ObjectId.createFromHexString(postdata.userid)});
-        const profile = await users.findOne({_id:  ObjectId.createFromHexString(postdata.profileid)});
+  try {
+    const user = await users.findOne({ _id: ObjectId.createFromHexString(userid) });
+    const profile = await users.findOne({ _id: ObjectId.createFromHexString(profileid) });
 
-        if (!user)
-        {
-            errors.username = 'The user does not exist.';
-            console.log("User wasnt found");
-        }
-        if (!profile)
-        {
-            errors.profilename = 'The profile does not exist.';
-            console.log("Profile wasnt found");
-        }
-        if (Object.keys(errors).length > 0)
-        {
-            res.status(409).json(errors);
-        }
-        else{
-            session.startTransaction();
-
-            const updatedUser = await users.updateOne({_id: user._id},
-                { $addToSet: { following: profile._id } }
-                );
-            console.log("update user:", updatedUser);
-            const updatedProfile = await users.updateOne({_id: profile._id},
-                { $addToSet: { followers: user._id } }
-                );
-            await session.commitTransaction();
-            res.status(200).json({message: "followed succesfully"});
-        }
-    }catch (err){
-        await session.abortTransaction();
-        res.status(500).json({error: err.message});
-    }finally{
-        session.endSession();
+    if (!user || !profile) {
+      return res.status(404).json({ error: "User or profile not found" });
     }
-}
+
+    session.startTransaction();
+
+    const existingFollow = await follows.findOne({
+      userId: user._id,
+      profileId: profile._id,
+    });
+
+    if (!existingFollow) {
+      await follows.insertOne({
+        userId: user._id,
+        profileId: profile._id,
+        createdAt: new Date()
+      });
+    }
+
+    await session.commitTransaction();
+    res.status(200).json({ message: "Followed successfully" });
+
+  } catch (err) {
+    await session.abortTransaction();
+    res.status(500).json({ error: err.message });
+  } finally {
+    session.endSession();
+  }
+};
 
 exports.unfollowprofile = async (req, res) => {
-    console.log("unfollow body: ", req.body);
-    const postdata = req.body;
-    const client = database.getCurrentInstance()
-    const session = client.startSession();
-    const db = client.db("ZLALOON");
-    const users = db.collection("Users");
+  const { userid, profileid } = req.body;
+  const client = database.getCurrentInstance();
+  const session = client.startSession();
+  const db = client.db("ZLALOON");
+  const users = db.collection("Users");
+  const follows = db.collection("Follows");
 
-    try{
-        let errors = {};
-        const user = await users.findOne({_id: ObjectId.createFromHexString(postdata.userid)});
-        const profile = await users.findOne({_id:  ObjectId.createFromHexString(postdata.profileid)});
+  try {
+    const user = await users.findOne({ _id: ObjectId.createFromHexString(userid) });
+    const profile = await users.findOne({ _id: ObjectId.createFromHexString(profileid) });
 
-        if (!user)
-        {
-            errors.username = 'The user does not exist.';
-            console.log("User wasnt found");
-        }
-        if (!profile)
-        {
-            errors.profilename = 'The profile does not exist.';
-            console.log("Profile wasnt found");
-        }
-        if (Object.keys(errors).length > 0)
-        {
-            res.status(409).json(errors);
-        }
-        else{
-            session.startTransaction();
-
-            const updatedUser = await users.updateOne({_id: user._id},
-                { $pull: { following: profile._id } }
-                );
-            console.log("update user:", updatedUser);
-            const updatedProfile = await users.updateOne({_id: profile._id},
-                { $pull: { followers: user._id } }
-                );
-            await session.commitTransaction();
-            res.status(200).json({message: "unfollowed succesfully"});
-        }
-    }catch (err){
-        await session.abortTransaction();
-        res.status(500).json({error: err.message});
-    }finally{
-        session.endSession();
+    if (!user || !profile) {
+      return res.status(404).json({ error: "User or profile not found" });
     }
-}
+
+    session.startTransaction();
+
+    await follows.deleteOne({
+      userId: user._id,
+      profileId: profile._id,
+    });
+
+    await session.commitTransaction();
+    res.status(200).json({ message: "Unfollowed successfully" });
+
+  } catch (err) {
+    await session.abortTransaction();
+    res.status(500).json({ error: err.message });
+  } finally {
+    session.endSession();
+  }
+};
+
+exports.getisfollowing = async (req, res) => {
+  const { username, profilename } = req.query;
+  const db = database.getCurrentInstance().db("ZLALOON");
+  const users = db.collection("Users");
+  const follows = db.collection("Follows");
+
+  try {
+    const user = await users.findOne({ username });
+    const profile = await users.findOne({ username: profilename });
+
+    if (!user || !profile) {
+      return res.status(404).json({ error: "User or profile not found" });
+    }
+
+    const follow = await follows.findOne({
+      userId: user._id,
+      profileId: profile._id,
+    });
+
+    res.status(200).json({ isfollowing: !!follow });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error getting following status" });
+  }
+};

@@ -5,12 +5,11 @@ module.exports = {
   },
   primary: {
     light: "#ff0000",
-    
     dark: "#ffaa00",
   },
   secondary: {
-    light: "#3F51B5",
-    dark: "#3F51B5",
+    light: "#ff4600",
+    dark: "#ff4600",
   },
   background: {
     light: "#fafafa",

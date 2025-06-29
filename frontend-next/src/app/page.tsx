@@ -13,14 +13,18 @@ export default function Home() {
         <div className="w-[700px] min-h-[calc(100vh-50px)] pt-[50px]
         opacity-90 hover:opacity-95 transition-opacity duration-300
         border-l border-r border-primary-light dark:border-primary-dark
-        bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark
+        bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark min-h-[calc(100vh)]
         ">
           <PostCreator></PostCreator>
-          <Content
-            query="http://localhost:5000/getpostslike"
-            pattern=""
-            limit={5}
-          />
+          <div className="p-4">
+            <Content
+              query="http://localhost:5000/getpostslike"
+              contentType="post"
+              pattern=""
+              limit={5}
+              loadOnScroll={true}
+              />
+          </div>
         </div>
 
       </div>
