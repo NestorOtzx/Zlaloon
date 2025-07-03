@@ -8,8 +8,9 @@ import { UserProfile } from '@/types/types'
 
 export default function ProfilePageClient({ profile }: { profile: UserProfile }) {
   const { user, isAuthenticated } = useAuth()
+  console.log(user);
 
-  const isOwnProfile = isAuthenticated && user?.name === profile.username
+  const isOwnProfile = isAuthenticated && user?.username === profile.username
 
   return (
     <div className="flex flex-row justify-center min-h-[calc(100vh)]">
@@ -19,7 +20,7 @@ export default function ProfilePageClient({ profile }: { profile: UserProfile })
         border-l border-r border-primary-light dark:border-primary-dark
         bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark"
       >
-        <Profile profile={profile} />
+        <Profile profile={profile} showLarge={true}/>
 
         {isOwnProfile && <PostCreator />}
 

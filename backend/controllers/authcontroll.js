@@ -37,26 +37,21 @@ exports.loginController = async (req, res) => {
   const db = database.getCurrentInstance().db("ZLALOON");
   const users = db.collection("Users");
   try{
-    console.log("VOY A LOGEAR", userdata);
     let user = {}
     let errors = {}
     if (userdata["username"].includes('@'))
     {
-      console.log("Ingresando con correo");
       user = await users.findOne({email: userdata.username}); 
     }else{
-      console.log("Ingresando con username");
       user = await users.findOne({username: userdata.username}); 
     }
     userdata._id = user._id;
-    console.log("here 1");
     if (!user)
     {
       errors.username = 'El nombre de usuario, correo, o contraseña no coinciden';
     }else{
       if (user.password === userdata.password)
       {
-        console.log("las contraseñas coinciden");
       }else{
         errors.username = 'El nombre de usuario, correo, o contraseña no coinciden';
       }
@@ -70,7 +65,6 @@ exports.loginController = async (req, res) => {
       //Session management
       req.session.username = userdata.username;
       req.session.userid = userdata._id;
-      console.log("USUARIO LOGEADO, REQ: ", req.session);
       res.status(201).json({message: `Usuario logeado con exito`});
     }
     

@@ -65,6 +65,7 @@ export default function Navbar() {
     }
   }, [showInput])
 
+
   return (
     <motion.nav
       initial={{ y: -50 }}
@@ -131,7 +132,7 @@ export default function Navbar() {
               onClick={() => setUserDropdownOpen(!userDropdownOpen)}
               className="h-full px-4 flex items-center gap-1 font-semibold text-inherit bg-inherit hover:bg-background-lightContrast dark:hover:bg-background-darkContrast transition-colors"
             >
-              {user?.name}
+              {user?.username}
               <ChevronDown size={16} />
             </button>
 
@@ -148,7 +149,7 @@ export default function Navbar() {
                     className="px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
                     onClick={() => {
                       setUserDropdownOpen(false)
-                      router.push('/'+user?.name)
+                      router.push('/'+user?.username)
                     }}
                   >
                     Profile

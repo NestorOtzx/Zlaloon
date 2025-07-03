@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react"
 import Post from "./Post"
 import Profile from "./Profile"
 import { PostType, ProfileType } from "@/types/types"
-import useAuth from "@/hooks/useAuth"
+import { useAuth } from '@/context/AuthProvider'
 
 type ContentProps = {
   query: string
@@ -13,6 +13,7 @@ type ContentProps = {
   username?: string
   limit?: number
   loadOnScroll?: boolean
+  postId?: string // 👈 nuevo parámetro opcional
 }
 
 type GenericItem = PostType | ProfileType
@@ -23,7 +24,8 @@ export default function Content({
   pattern = "",
   username = "",
   limit = 10,
-  loadOnScroll = true
+  loadOnScroll = true,
+  postId // 👈 nuevo parámetro
 }: ContentProps) {
   const [items, setItems] = useState<GenericItem[]>([])
   const [loading, setLoading] = useState(false)
@@ -33,15 +35,13 @@ export default function Content({
   const [resetDone, setResetDone] = useState(false)
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
-  const { user, isAuthenticated } = useAuth()
-  const viewerUsername = isAuthenticated && user?.name ? user.name : ""
-  const authReady = user !== undefined
+  const { user, isAuthenticated, loading: authLoading } = useAuth()
+  const viewerUsername = isAuthenticated && user?.username ? user.username : ""
 
   const fetchItems = useCallback(async () => {
     if (loading || !hasMore) return
     setLoading(true)
     setError(null)
-
     try {
       const url = new URL(query)
       url.searchParams.set("limit", limit.toString())
@@ -50,14 +50,16 @@ export default function Content({
       if (contentType === "post") {
         url.searchParams.set("pattern", pattern)
         url.searchParams.set("username", username)
-        if (viewerUsername) url.searchParams.set("viewerUsername", viewerUsername)
+        if (postId) url.searchParams.set("postId", postId)
+        if (isAuthenticated && viewerUsername) {
+          url.searchParams.set("viewerUsername", viewerUsername)
+        }
       } else {
         url.searchParams.set("likename", pattern)
       }
 
       const res = await fetch(url.toString())
       if (!res.ok) throw new Error(`Error fetching ${contentType}s`)
-
       const data: GenericItem[] = await res.json()
 
       if (data.length === 0) {
@@ -75,9 +77,9 @@ export default function Content({
     } finally {
       setLoading(false)
     }
-  }, [query, pattern, username, viewerUsername, limit, cursor, hasMore, loading, contentType])
+  }, [query, pattern, username, viewerUsername, limit, cursor, hasMore, loading, contentType, isAuthenticated, postId])
 
-  // Reset state on query change
+  // Reset when params change
   useEffect(() => {
     setItems([])
     setCursor(null)
@@ -85,29 +87,35 @@ export default function Content({
     setResetDone(false)
     const timeout = setTimeout(() => setResetDone(true), 0)
     return () => clearTimeout(timeout)
-  }, [pattern, username, query, contentType])
+  }, [pattern, username, query, contentType, postId])
 
-  // Initial fetch
+  // First fetch: esperar a que useAuth termine
   useEffect(() => {
-    if (!authReady || !resetDone || loading || items.length > 0) return
+    if (!resetDone || loading || items.length > 0 || authLoading) return
+    if (isAuthenticated && !viewerUsername) return // 👈 evita fetch prematuro
     fetchItems()
-  }, [authReady, resetDone, loading, items.length, fetchItems])
+  }, [resetDone, loading, items.length, fetchItems, authLoading, isAuthenticated, viewerUsername])
 
-  // Scroll-triggered loading
+  // Scroll automático
   useEffect(() => {
-    if (!loadOnScroll || !authReady || !loaderRef.current) return
-
+    if (!loadOnScroll || !loaderRef.current) return
     const observer = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore && !loading) {
         fetchItems()
       }
-    }, {
-      rootMargin: "200px"
-    })
+    }, { rootMargin: "200px" })
 
     observer.observe(loaderRef.current)
     return () => observer.disconnect()
-  }, [authReady, fetchItems, hasMore, loading, loadOnScroll])
+  }, [fetchItems, hasMore, loading, loadOnScroll])
+
+  if (authLoading) {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-light dark:border-primary-dark" />
+      </div>
+    )
+  }
 
   return (
     <div className="w-full text-text-light dark:text-text-dark">

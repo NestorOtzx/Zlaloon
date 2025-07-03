@@ -1,8 +1,9 @@
-import NextAuth, { AuthOptions } from 'next-auth'
+import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import clientPromise from '@/lib/mongodb'
 import { compare } from 'bcrypt'
+import type { AuthOptions } from 'next-auth'
 
 export const authOptions: AuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -14,10 +15,8 @@ export const authOptions: AuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        console.log("authorize() called", credentials)
-
         const client = await clientPromise
-        const db = client.db("ZLALOON")
+        const db = client.db('ZLALOON')
 
         const user = await db.collection('Users').findOne({
           $or: [
@@ -26,57 +25,43 @@ export const authOptions: AuthOptions = {
           ]
         })
 
-        if (!user) {
-          console.log("No user found")
-          return null
-        }
+        if (!user) return null
 
-        // Solo para testing sin hash
-        let isValid = credentials!.password === user.password
-        if (!isValid)
-          isValid = await compare(credentials!.password, user.password)
+        const isValid = credentials!.password === user.password || await compare(credentials!.password, user.password)
+        if (!isValid) return null
 
-        if (!isValid) {
-          console.log("Invalid password")
-          return null
-        }
-
-        console.log("Auth success:", {
-          id: user._id.toString(),
-          name: user.username,
-          email: user.email
-        })
-
+        // Aquí retornamos un objeto que coincide con los tipos personalizados
         return {
-          id: user._id.toString(),
-          name: user.username,
-          email: user.email
-        }
+          userid: user._id.toString(),
+          username: user.username,
+        } as any
       }
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
   },
   pages: {
-    signIn: '/login'
+    signIn: '/login',
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
-        token.id = user.id
+        token.userid = user.userid
+        token.username = user.username
       }
       return token
     },
-    async session({ session, token }) {
-      if (session?.user && token?.id) {
-        session.user._id = token.id as string
+    async session({ session, token }: any) {
+      session.user = {
+        userid: token.userid,
+        username: token.username,
       }
       return session
     }
-  }
+  },
+  debug: true,
 }
 
 const handler = NextAuth(authOptions)

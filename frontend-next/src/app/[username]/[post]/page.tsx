@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar'
+import PostCreator from '@/components/PostCreator'
 import PostPageClient from '@/components/PostPageClient'
 
 export const dynamic = 'force-dynamic'
@@ -14,6 +15,7 @@ export default function PostView() {
           bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark"
         >
           <PostPageClient />
+          
         </div>
       </div>
     </div>

@@ -1,12 +1,11 @@
 'use client'
 
-import { createContext, useContext, ReactNode } from 'react'
+import { createContext, useContext, ReactNode, useMemo } from 'react'
 import { useSession } from 'next-auth/react'
 
 type ExtendedUser = {
-  name?: string
-  email?: string
-  _id?: string
+  userid: string
+  username: string
 }
 
 type AuthContextType = {
@@ -25,11 +24,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { data: session, status } = useSession()
   const loading = status === 'loading'
 
-  // ⬇️ Forzamos el tipo para que TypeScript reconozca _id
-  const user = session?.user as ExtendedUser | undefined
+  const value = useMemo(() => {
+    const user = session?.user as ExtendedUser | undefined
+    return {
+      user: user ?? null,
+      isAuthenticated: !!user,
+      loading,
+    }
+  }, [session, loading])
 
   return (
-    <AuthContext.Provider value={{ user: user ?? null, isAuthenticated: !!user, loading }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   )

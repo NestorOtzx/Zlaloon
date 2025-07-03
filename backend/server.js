@@ -2,8 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const database = require('./config/mongodb');
 const session = require("express-session");
+const cloudinarybucket = require("./config/cloudinarybucket.js")
+
 
 require('dotenv').config();
+cloudinarybucket.config();
 
 //Express
 const app = express(); //inicializar express

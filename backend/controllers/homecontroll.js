@@ -3,7 +3,6 @@ exports.home = (req, res) =>
 {
     if (req.session.username && req.session.userid)
     {
-        console.log("reading credentials");
         credentials = {}
         credentials.username = req.session.username;        
         credentials.loggedin = true;
